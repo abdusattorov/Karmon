@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
         TabView {
             Tab("Transactions", systemImage: "list.bullet.rectangle.fill") {
@@ -15,6 +16,9 @@ struct ContentView: View {
             }
             Tab("Statistics", systemImage: "chart.pie.fill") {
 
+            }
+            Tab("Settings", systemImage: "gear") {
+                SettingsView()
             }
         }
     }

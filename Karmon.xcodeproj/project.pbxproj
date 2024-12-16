@@ -16,6 +16,9 @@
 		0721C4542D07501000A32EDF /* AddTransactionSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4532D07501000A32EDF /* AddTransactionSheetView.swift */; };
 		0721C46E2D0871D400A32EDF /* AddTransactionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C46D2D0871D400A32EDF /* AddTransactionIntent.swift */; };
 		0721C4732D09877E00A32EDF /* TransactionCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4712D09877E00A32EDF /* TransactionCellView.swift */; };
+		0721C4962D0AE48600A32EDF /* TransactionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4952D0AE48600A32EDF /* TransactionViewModel.swift */; };
+		0721C4982D103CBC00A32EDF /* KarmonShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4972D103CBC00A32EDF /* KarmonShortcutProvider.swift */; };
+		0721C49A2D10640F00A32EDF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4992D10640F00A32EDF /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,9 @@
 		0721C4532D07501000A32EDF /* AddTransactionSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionSheetView.swift; sourceTree = "<group>"; };
 		0721C46D2D0871D400A32EDF /* AddTransactionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionIntent.swift; sourceTree = "<group>"; };
 		0721C4712D09877E00A32EDF /* TransactionCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCellView.swift; sourceTree = "<group>"; };
+		0721C4952D0AE48600A32EDF /* TransactionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewModel.swift; sourceTree = "<group>"; };
+		0721C4972D103CBC00A32EDF /* KarmonShortcutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarmonShortcutProvider.swift; sourceTree = "<group>"; };
+		0721C4992D10640F00A32EDF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +77,7 @@
 			children = (
 				0721C44E2D0748CB00A32EDF /* Models */,
 				0721C44D2D0748CB00A32EDF /* Views */,
+				0721C4942D0AE46600A32EDF /* ViewModels */,
 				0721C4722D09877E00A32EDF /* Components */,
 				0721C46C2D0871A400A32EDF /* AppIntents */,
 				0721C4402D0748A700A32EDF /* Preview Content */,
@@ -84,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				0721C4422D0748A700A32EDF /* ContentView.swift */,
+				0721C4992D10640F00A32EDF /* SettingsView.swift */,
 				0721C4512D074E5E00A32EDF /* TransactionsView.swift */,
 				0721C4532D07501000A32EDF /* AddTransactionSheetView.swift */,
 			);
@@ -102,6 +110,7 @@
 			isa = PBXGroup;
 			children = (
 				0721C46D2D0871D400A32EDF /* AddTransactionIntent.swift */,
+				0721C4972D103CBC00A32EDF /* KarmonShortcutProvider.swift */,
 			);
 			path = AppIntents;
 			sourceTree = "<group>";
@@ -112,6 +121,14 @@
 				0721C4712D09877E00A32EDF /* TransactionCellView.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		0721C4942D0AE46600A32EDF /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				0721C4952D0AE48600A32EDF /* TransactionViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,8 +209,11 @@
 				0721C4542D07501000A32EDF /* AddTransactionSheetView.swift in Sources */,
 				0721C4522D074E5E00A32EDF /* TransactionsView.swift in Sources */,
 				0721C4462D0748A700A32EDF /* KarmonApp.swift in Sources */,
+				0721C49A2D10640F00A32EDF /* SettingsView.swift in Sources */,
+				0721C4982D103CBC00A32EDF /* KarmonShortcutProvider.swift in Sources */,
 				0721C4732D09877E00A32EDF /* TransactionCellView.swift in Sources */,
 				0721C4502D0748FE00A32EDF /* Transaction.swift in Sources */,
+				0721C4962D0AE48600A32EDF /* TransactionViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,11 +344,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Karmon/KarmonDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Karmon/Preview Content\"";
+				DEVELOPMENT_TEAM = BYX59FAGA5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Karmon/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -352,11 +375,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Karmon/Karmon.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Karmon/Preview Content\"";
+				DEVELOPMENT_TEAM = BYX59FAGA5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Karmon/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

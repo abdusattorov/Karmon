@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct AddTransactionSheetView: View {
-    @Environment(\.modelContext) var context
+//    @Environment(\.modelContext) var context
+    
+    let transactionVM: TransactionViewModel = TransactionViewModel.shared
     
     @State private var title: String = ""
     @State private var date: Date = .now
@@ -37,7 +39,7 @@ struct AddTransactionSheetView: View {
                     Button("Save") {
                         
                         let transaction = Transaction(title: title, amount: amount, currency: currency, timestamp: date)
-                        context.insert(transaction)
+//                        context.insert(transaction)
                         
 //                        If SwiftData auto-save doesn't work, uncomment this snippet
 //                        do {
@@ -46,7 +48,7 @@ struct AddTransactionSheetView: View {
 //                        } catch {
 //                            print("Failed to save context \(error)")
 //                        }
-                        
+                        transactionVM.create(transaction: transaction)
                         isShowingAddTransactionSheet.toggle()
                     }
                 }

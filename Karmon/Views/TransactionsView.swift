@@ -10,21 +10,26 @@ import SwiftData
 
 struct TransactionsView: View {
     
+    var transactionVM: TransactionViewModel = TransactionViewModel.shared
+    
     @Environment(\.modelContext) var context
     @State private var isShowingAddTransactionSheet = false
-    @Query(sort: \Transaction.timestamp) var transactions: [Transaction] = []
+//    @Query(sort: \Transaction.timestamp) var transactions: [Transaction] = []
     
     var body: some View {
         
         NavigationStack {
             List {
-                ForEach(transactions) { transaction in
+                ForEach(transactionVM.transactions) { transaction in
                     TransactionCellView(transaction: transaction)
                 }
+//                .onDelete { indexSet in
+//                    for index in indexSet {
+//                        context.delete(transactions[index])
+//                    }
+//                }
                 .onDelete { indexSet in
-                    for index in indexSet {
-                        context.delete(transactions[index])
-                    }
+                    transactionVM.delete(at: indexSet)
                 }
             }
             .navigationTitle("Transactions")
@@ -32,14 +37,14 @@ struct TransactionsView: View {
                 AddTransactionSheetView(isShowingAddTransactionSheet: $isShowingAddTransactionSheet)
             }
             .toolbar {
-                if !transactions.isEmpty {
+                if !transactionVM.transactions.isEmpty {
                     Button("Add Transaction", systemImage: "plus") {
                         isShowingAddTransactionSheet.toggle()
                     }
                 }
             }
             .overlay {
-                if transactions.isEmpty {
+                if transactionVM.transactions.isEmpty {
                     ContentUnavailableView(label: {
                         Label("No Transactions", systemImage: "list.bullet.rectangle.portrait")
                     }, description: {
