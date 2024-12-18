@@ -10,10 +10,10 @@ import SwiftData
 import AppIntents
 
 
-struct Category: Identifiable {
-    var id: UUID = UUID()
-    var title: String
-}
+//struct Category: Identifiable {
+//    var id: UUID = UUID()
+//    var title: String
+//}
 
 //@Model
 struct Transaction: Identifiable {
@@ -22,6 +22,7 @@ struct Transaction: Identifiable {
     var title: String
     var amount: Double
     var currency: String
+    var category: TransactionCategory
     var timestamp: Date
     
 //    init(id: String = UUID().uuidString, title: String, amount: Double, currency: String, timestamp: Date) {
@@ -33,8 +34,33 @@ struct Transaction: Identifiable {
 //    }
 }
 
+enum TransactionCategory: String, AppEnum, CaseIterable {
+    case groceries = "Groceries"
+    case eatingOut = "Eating Out"
+    case snacks = "Snacks"
+    case rent = "Rent"
+    case transport = "Transport"
+    case clothes = "Clothes"
+    case traveling = "Traveling"
+    case other = "Other"
+    
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Category"
+    
+    static var caseDisplayRepresentations: [Self: DisplayRepresentation] = [
+        .groceries: "Groceries",
+        .eatingOut: "Eating Out",
+        .snacks: "Snacks",
+        .rent: "Rent",
+        .transport: "Transport",
+        .clothes: "Clothes",
+        .traveling: "Traveling",
+        .other: "Other"
+    ]
+
+}
+
 extension Transaction: AppEntity {
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Transaction"
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Expense"
     var displayRepresentation: DisplayRepresentation {
         .init(title: LocalizedStringResource(stringLiteral: title))
     }

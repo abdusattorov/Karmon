@@ -14,20 +14,22 @@ struct TransactionsView: View {
     
     @Environment(\.modelContext) var context
     @State private var isShowingAddTransactionSheet = false
-//    @Query(sort: \Transaction.timestamp) var transactions: [Transaction] = []
+    //    @Query(sort: \Transaction.timestamp) var transactions: [Transaction] = []
     
     var body: some View {
         
         NavigationStack {
             List {
-                ForEach(transactionVM.transactions) { transaction in
-                    TransactionCellView(transaction: transaction)
+                
+                ForEach(transactionVM.groupedTransactions().keys.sorted(by: >), id: \.self) { date in
+                    Section(header: Text(date)) {
+                        
+                        ForEach(transactionVM.groupedTransactions()[date] ?? [], id: \.id) { transaction in
+                            TransactionCellView(transaction: transaction)
+                        }
+                        
+                    }
                 }
-//                .onDelete { indexSet in
-//                    for index in indexSet {
-//                        context.delete(transactions[index])
-//                    }
-//                }
                 .onDelete { indexSet in
                     transactionVM.delete(at: indexSet)
                 }

@@ -13,7 +13,7 @@ struct AddTransactionIntent: AppIntent {
     
 //    @Environment(\.modelContext) var context
     
-    static var title = LocalizedStringResource("Add a new transaction")
+    static var title = LocalizedStringResource("Add a new expense")
     
     @Parameter(title: "Title")
     var transactionTitle: String
@@ -21,8 +21,11 @@ struct AddTransactionIntent: AppIntent {
     @Parameter(title: "Cost")
     var transactionAmount: Double
     
+    @Parameter(title: "Category")
+    var transactionCategory: TransactionCategory
+    
     func perform() async throws -> some IntentResult {
-        let transaction = Transaction(title: transactionTitle, amount: transactionAmount, currency: "USD", timestamp: .now)
+        let transaction = Transaction(title: transactionTitle, amount: transactionAmount, currency: "USD", category: transactionCategory, timestamp: .now)
 //        context.insert(transaction)
         TransactionViewModel.shared.create(transaction: transaction)
         return .result()

@@ -16,6 +16,7 @@ struct AddTransactionSheetView: View {
     @State private var date: Date = .now
     @State private var amount: Double = 0
     @State private var currency: String = "USD"
+    @State private var selectedCategory: TransactionCategory = .other
     @Binding var isShowingAddTransactionSheet: Bool
     
     var body: some View {
@@ -23,6 +24,11 @@ struct AddTransactionSheetView: View {
         NavigationStack {
             Form {
                 TextField("Title", text: $title)
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(TransactionCategory.allCases, id: \.rawValue) { category in
+                        Text(category.rawValue).tag(category)
+                    }
+                }
                 DatePicker("Date", selection: $date, displayedComponents: .date)
                 TextField("Amount", value: $amount, format: .currency(code: "EUR"))
                     .keyboardType(.decimalPad)
@@ -38,7 +44,7 @@ struct AddTransactionSheetView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
                         
-                        let transaction = Transaction(title: title, amount: amount, currency: currency, timestamp: date)
+                        let transaction = Transaction(title: title, amount: amount, currency: currency, category: selectedCategory, timestamp: date)
 //                        context.insert(transaction)
                         
 //                        If SwiftData auto-save doesn't work, uncomment this snippet

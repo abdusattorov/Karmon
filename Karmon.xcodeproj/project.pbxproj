@@ -37,6 +37,19 @@
 		0721C4992D10640F00A32EDF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		0721C49B2D10EB1E00A32EDF /* Animations */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Animations;
+			sourceTree = "<group>";
+		};
+		0721C49C2D12E57100A32EDF /* Extenstions */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Extenstions;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		0721C42B2D07489D00A32EDF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -75,6 +88,8 @@
 		0721C4442D0748A700A32EDF /* Karmon */ = {
 			isa = PBXGroup;
 			children = (
+				0721C49C2D12E57100A32EDF /* Extenstions */,
+				0721C49B2D10EB1E00A32EDF /* Animations */,
 				0721C44E2D0748CB00A32EDF /* Models */,
 				0721C44D2D0748CB00A32EDF /* Views */,
 				0721C4942D0AE46600A32EDF /* ViewModels */,
@@ -145,6 +160,10 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0721C49B2D10EB1E00A32EDF /* Animations */,
+				0721C49C2D12E57100A32EDF /* Extenstions */,
 			);
 			name = Karmon;
 			packageProductDependencies = (

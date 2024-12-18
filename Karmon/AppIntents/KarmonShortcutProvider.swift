@@ -17,9 +17,9 @@ struct MovieAppShortcutProvider: AppShortcutsProvider {
         AppShortcut(
             intent: AddTransactionIntent(),
             phrases: [
-                "Add a new transaction to the list"
+                "Add expense"
             ],
-            shortTitle: "Add Transaction",
+            shortTitle: "Add Expense",
             systemImageName: "scroll.fill"
         )
         

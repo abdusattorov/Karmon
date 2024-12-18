@@ -11,16 +11,33 @@ struct TransactionCellView: View {
     
     let transaction: Transaction
     
+//    func amountFormatted(amount: Double) -> String {
+//        let formatter = NumberFormatter()
+//        formatter.numberStyle = .currency
+//        formatter.usesGroupingSeparator = true
+//        formatter.locale = Locale(identifier: "en_US")
+//        
+//        if let result = formatter.string(from: amount as NSNumber) {
+//            return result
+//        }
+//        
+//        return ""
+//    }
+    
     var body: some View {
-        HStack {
-            Text(transaction.timestamp, format: .dateTime.month(.abbreviated).day())
-            Text(transaction.title)
-            Spacer()
-            Text(transaction.amount, format: .currency(code: "USD"))
+        VStack(alignment: .leading) {
+            HStack {
+                Text(transaction.title)
+                Spacer()
+                Text(transaction.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+            }
+            Text(transaction.category.rawValue)
+                .foregroundStyle(.gray)
+                .font(.caption)
         }
     }
 }
 
 #Preview {
-    TransactionCellView(transaction: Transaction(title: "Groceries", amount: 1, currency: "USD", timestamp: .now))
+    TransactionCellView(transaction: Transaction(title: "Groceries", amount: 1, currency: "USD", category: TransactionCategory.groceries, timestamp: .now))
 }
