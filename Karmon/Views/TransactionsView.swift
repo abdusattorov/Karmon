@@ -30,6 +30,13 @@ struct TransactionsView: View {
                         
                     }
                 }
+                
+//                ForEach(transactionVM.groupedTransactionsByMonthAndDate().keys.sorted(by: >), id: \.self) { date in
+//                    
+//                    ForEach(transactionVM.groupedTransactionsByMonthAndDate())
+//                    
+//                }
+                
                 .onDelete { indexSet in
                     transactionVM.delete(at: indexSet)
                 }

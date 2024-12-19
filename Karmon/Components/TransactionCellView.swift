@@ -34,6 +34,9 @@ struct TransactionCellView: View {
             Text(transaction.category.rawValue)
                 .foregroundStyle(.gray)
                 .font(.caption)
+//            Text(transaction.timestamp, format: .dateTime.month(.abbreviated).day())
+//                .foregroundStyle(.gray)
+//                .font(.caption)
         }
     }
 }
