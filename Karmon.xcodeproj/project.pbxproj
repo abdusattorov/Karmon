@@ -19,6 +19,7 @@
 		0721C4962D0AE48600A32EDF /* TransactionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4952D0AE48600A32EDF /* TransactionViewModel.swift */; };
 		0721C4982D103CBC00A32EDF /* KarmonShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4972D103CBC00A32EDF /* KarmonShortcutProvider.swift */; };
 		0721C49A2D10640F00A32EDF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4992D10640F00A32EDF /* SettingsView.swift */; };
+		0721C4A22D140C9900A32EDF /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4A12D140C9900A32EDF /* StatisticsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		0721C4952D0AE48600A32EDF /* TransactionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewModel.swift; sourceTree = "<group>"; };
 		0721C4972D103CBC00A32EDF /* KarmonShortcutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarmonShortcutProvider.swift; sourceTree = "<group>"; };
 		0721C4992D10640F00A32EDF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		0721C4A12D140C9900A32EDF /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -106,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				0721C4422D0748A700A32EDF /* ContentView.swift */,
+				0721C4A12D140C9900A32EDF /* StatisticsView.swift */,
 				0721C4992D10640F00A32EDF /* SettingsView.swift */,
 				0721C4512D074E5E00A32EDF /* TransactionsView.swift */,
 				0721C4532D07501000A32EDF /* AddTransactionSheetView.swift */,
@@ -224,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0721C4452D0748A700A32EDF /* ContentView.swift in Sources */,
+				0721C4A22D140C9900A32EDF /* StatisticsView.swift in Sources */,
 				0721C46E2D0871D400A32EDF /* AddTransactionIntent.swift in Sources */,
 				0721C4542D07501000A32EDF /* AddTransactionSheetView.swift in Sources */,
 				0721C4522D074E5E00A32EDF /* TransactionsView.swift in Sources */,

@@ -103,6 +103,17 @@ class TransactionViewModel {
 //        return sortedByMonthAndDate
 //    }
     
+    // Function to calculate total money spent per category
+    func totalSpentPerCategory() -> [TransactionCategory: Double] {
+        // Group transactions by category and sum the amounts for each category
+        let totals = Dictionary(grouping: transactions, by: { $0.category })
+            .mapValues { transactions in
+                transactions.reduce(0) { $0 + $1.amount }
+            }
+        
+        return totals
+    }
+    
     func create(transaction: Transaction) {
         self.transactions.insert(transaction, at: 0)
     }
