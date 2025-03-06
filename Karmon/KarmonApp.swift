@@ -11,27 +11,25 @@ import SwiftData
 @main
 struct KarmonApp: App {
     
-//    let container: ModelContainer = {
-//        let schema = Schema()
-//        let container = try! ModelContainer(for: schema, configurations: [])
-//        return container
-//    }()
-    
-//    let container: ModelContainer? = {
-//        do {
-//            let schema = Schema()
-//            let container = try ModelContainer(for: schema, configurations: [])
-//            return container
-//        } catch {
-//            print("Error initializing ModelContainer: \(error)")
-//            return nil
-//        }
-//    }()
+    let container: ModelContainer
     
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-//        .modelContainer(for: [Transaction.self])
+        .modelContainer(container)
+    }
+    
+    init() {
+        let schema = Schema([Transaction.self])
+        let config = ModelConfiguration("Transactions", schema: schema)
+        
+        do {
+            container = try ModelContainer(for: schema, configurations: config)
+        } catch {
+            fatalError("Could not configure the container.")
+        }
+        
+        print(URL.applicationSupportDirectory.path(percentEncoded: false))
     }
 }

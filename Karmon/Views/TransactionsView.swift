@@ -10,57 +10,51 @@ import SwiftData
 
 struct TransactionsView: View {
     
-    var transactionVM: TransactionViewModel = TransactionViewModel.shared
+//    var transactionVM: TransactionViewModel = TransactionViewModel.shared
     
     @Environment(\.modelContext) var context
-    @State private var isShowingAddTransactionSheet = false
-    //    @Query(sort: \Transaction.timestamp) var transactions: [Transaction] = []
+    @State private var addTransaction = false
+    @Query private var transactions: [Transaction]
+    @Query private var categories: [Category]
     
     var body: some View {
         
         NavigationStack {
             List {
-                
-                ForEach(transactionVM.groupedTransactions().keys.sorted(by: >), id: \.self) { date in
-                    Section(header: Text(date)) {
-                        
-                        ForEach(transactionVM.groupedTransactions()[date] ?? [], id: \.id) { transaction in
-                            TransactionCellView(transaction: transaction)
-                        }
-                        
+                ForEach(transactions) { transaction in
+                    VStack {
+                        Text(transaction.title)
                     }
                 }
-                
-//                ForEach(transactionVM.groupedTransactionsByMonthAndDate().keys.sorted(by: >), id: \.self) { date in
-//                    
-//                    ForEach(transactionVM.groupedTransactionsByMonthAndDate())
-//                    
-//                }
-                
                 .onDelete { indexSet in
-                    transactionVM.delete(at: indexSet)
+                    for index in indexSet {
+                        let transaction = transactions[index]
+                        context.delete(transaction)
+                    }
                 }
             }
+            .listStyle(.inset)
+            
             .navigationTitle("Transactions")
-            .sheet(isPresented: $isShowingAddTransactionSheet) {
-                AddTransactionSheetView(isShowingAddTransactionSheet: $isShowingAddTransactionSheet)
+            .sheet(isPresented: $addTransaction) {
+                AddTransactionSheetView()
             }
             .toolbar {
-                if !transactionVM.transactions.isEmpty {
+                if !transactions.isEmpty {
                     Button("Add Transaction", systemImage: "plus") {
-                        isShowingAddTransactionSheet.toggle()
+                        addTransaction.toggle()
                     }
                 }
             }
             .overlay {
-                if transactionVM.transactions.isEmpty {
+                if transactions.isEmpty {
                     ContentUnavailableView(label: {
                         Label("No Transactions", systemImage: "list.bullet.rectangle.portrait")
                     }, description: {
                         Text("Start adding transactions to see your list")
                     }, actions: {
                         Button("Add Transaction") {
-                            isShowingAddTransactionSheet.toggle()
+                            addTransaction.toggle()
                         }
                     })
                     .offset(y: -60)

@@ -1,36 +1,36 @@
+////
+////  KarmonShortcutProvider.swift
+////  Karmon
+////
+////  Created by Abdusamad Abdusattorov on 16/12/24.
+////
 //
-//  KarmonShortcutProvider.swift
-//  Karmon
+//import Foundation
+//import AppIntents
 //
-//  Created by Abdusamad Abdusattorov on 16/12/24.
 //
-
-import Foundation
-import AppIntents
-
-
-struct MovieAppShortcutProvider: AppShortcutsProvider {
-
-    @AppShortcutsBuilder
-    static var appShortcuts: [AppShortcut] {
-
-        AppShortcut(
-            intent: AddTransactionIntent(),
-            phrases: [
-                "Add expense"
-            ],
-            shortTitle: "Add Expense",
-            systemImageName: "scroll.fill"
-        )
-        
+//struct MovieAppShortcutProvider: AppShortcutsProvider {
+//
+//    @AppShortcutsBuilder
+//    static var appShortcuts: [AppShortcut] {
+//
 //        AppShortcut(
-//            intent: MovieRatingIntent(),
+//            intent: AddTransactionIntent(),
 //            phrases: [
-//                "Add rating to movies"
+//                "Add expense"
 //            ],
-//            shortTitle: "Add rating",
-//            systemImageName: "star.circle"
+//            shortTitle: "Add Expense",
+//            systemImageName: "scroll.fill"
 //        )
-    }
-}
-
+//        
+////        AppShortcut(
+////            intent: MovieRatingIntent(),
+////            phrases: [
+////                "Add rating to movies"
+////            ],
+////            shortTitle: "Add rating",
+////            systemImageName: "star.circle"
+////        )
+//    }
+//}
+//

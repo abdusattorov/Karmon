@@ -26,7 +26,7 @@ struct SettingsView: View {
                         Text("Accounts")
                     }
                     NavigationLink {
-                        TransactionsView()
+                        CategoriesView()
                     } label: {
                         Image(systemName: "bag.fill")
                             .foregroundStyle(.white)
@@ -101,13 +101,6 @@ struct SettingsView: View {
             
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
-            //            .toolbar {
-            //                ToolbarItem(placement: .bottomBar) {
-            //                    Text("Karmon v0.0.1")
-            //                        .font(.callout)
-            //                        .foregroundStyle(.secondary)
-            //                }
-            //            }
         }
     }
 }

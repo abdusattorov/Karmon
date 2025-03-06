@@ -31,16 +31,13 @@ struct TransactionCellView: View {
                 Spacer()
                 Text(transaction.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
             }
-            Text(transaction.category.rawValue)
+            Text("Category here")
                 .foregroundStyle(.gray)
                 .font(.caption)
-//            Text(transaction.timestamp, format: .dateTime.month(.abbreviated).day())
-//                .foregroundStyle(.gray)
-//                .font(.caption)
         }
     }
 }
 
 #Preview {
-    TransactionCellView(transaction: Transaction(title: "Groceries", amount: 1, currency: "USD", category: TransactionCategory.groceries, timestamp: .now))
+    TransactionCellView(transaction: Transaction(title: "Groceries", amount: 1, currency: "USD", dateCreated: .now))
 }

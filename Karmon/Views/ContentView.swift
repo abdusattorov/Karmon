@@ -15,7 +15,7 @@ struct ContentView: View {
                 TransactionsView()
             }
             Tab("Statistics", systemImage: "chart.pie.fill") {
-                StatisticsView()
+//                StatisticsView()
             }
             Tab("Settings", systemImage: "gear") {
                 SettingsView()
