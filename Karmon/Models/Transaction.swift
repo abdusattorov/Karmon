@@ -68,7 +68,7 @@ class Transaction {
 
 @Model
 class Category {
-    var title: String = ""
+    var title: String = "other"
     var transactions: [Transaction]?
     
     init(title: String) {

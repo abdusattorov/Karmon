@@ -19,7 +19,9 @@
 		0721C4982D103CBC00A32EDF /* KarmonShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4972D103CBC00A32EDF /* KarmonShortcutProvider.swift */; };
 		0721C49A2D10640F00A32EDF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4992D10640F00A32EDF /* SettingsView.swift */; };
 		0721C4A22D140C9900A32EDF /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0721C4A12D140C9900A32EDF /* StatisticsView.swift */; };
+		0787207B2D7BBE7500F5E399 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078720792D7BBE7500F5E399 /* DateFormatter.swift */; };
 		078AAE992D79AAAD0080073E /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078AAE982D79AAAD0080073E /* CategoriesView.swift */; };
+		078AAE9D2D79F2BE0080073E /* EditTransactionSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078AAE9C2D79F2BE0080073E /* EditTransactionSheetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,21 +38,10 @@
 		0721C4972D103CBC00A32EDF /* KarmonShortcutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarmonShortcutProvider.swift; sourceTree = "<group>"; };
 		0721C4992D10640F00A32EDF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0721C4A12D140C9900A32EDF /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
+		078720792D7BBE7500F5E399 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		078AAE982D79AAAD0080073E /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
+		078AAE9C2D79F2BE0080073E /* EditTransactionSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionSheetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		0721C49B2D10EB1E00A32EDF /* Animations */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Animations;
-			sourceTree = "<group>";
-		};
-		0721C49C2D12E57100A32EDF /* Extenstions */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Extenstions;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		0721C42B2D07489D00A32EDF /* Frameworks */ = {
@@ -90,12 +81,12 @@
 		0721C4442D0748A700A32EDF /* Karmon */ = {
 			isa = PBXGroup;
 			children = (
-				0721C49C2D12E57100A32EDF /* Extenstions */,
-				0721C49B2D10EB1E00A32EDF /* Animations */,
 				0721C44E2D0748CB00A32EDF /* Models */,
 				0721C44D2D0748CB00A32EDF /* Views */,
 				0721C4722D09877E00A32EDF /* Components */,
+				0787207A2D7BBE7500F5E399 /* Extenstions */,
 				0721C46C2D0871A400A32EDF /* AppIntents */,
+				078720782D7BBE7100F5E399 /* Animations */,
 				0721C4402D0748A700A32EDF /* Preview Content */,
 				0721C4412D0748A700A32EDF /* Assets.xcassets */,
 				0721C4432D0748A700A32EDF /* KarmonApp.swift */,
@@ -111,6 +102,7 @@
 				0721C4992D10640F00A32EDF /* SettingsView.swift */,
 				0721C4512D074E5E00A32EDF /* TransactionsView.swift */,
 				0721C4532D07501000A32EDF /* AddTransactionSheetView.swift */,
+				078AAE9C2D79F2BE0080073E /* EditTransactionSheetView.swift */,
 				078AAE982D79AAAD0080073E /* CategoriesView.swift */,
 			);
 			path = Views;
@@ -141,6 +133,21 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		078720782D7BBE7100F5E399 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
+		0787207A2D7BBE7500F5E399 /* Extenstions */ = {
+			isa = PBXGroup;
+			children = (
+				078720792D7BBE7500F5E399 /* DateFormatter.swift */,
+			);
+			path = Extenstions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -155,10 +162,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				0721C49B2D10EB1E00A32EDF /* Animations */,
-				0721C49C2D12E57100A32EDF /* Extenstions */,
 			);
 			name = Karmon;
 			packageProductDependencies = (
@@ -218,9 +221,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				078AAE9D2D79F2BE0080073E /* EditTransactionSheetView.swift in Sources */,
 				0721C4452D0748A700A32EDF /* ContentView.swift in Sources */,
 				0721C4A22D140C9900A32EDF /* StatisticsView.swift in Sources */,
 				0721C46E2D0871D400A32EDF /* AddTransactionIntent.swift in Sources */,
+				0787207B2D7BBE7500F5E399 /* DateFormatter.swift in Sources */,
 				0721C4542D07501000A32EDF /* AddTransactionSheetView.swift in Sources */,
 				0721C4522D074E5E00A32EDF /* TransactionsView.swift in Sources */,
 				078AAE992D79AAAD0080073E /* CategoriesView.swift in Sources */,

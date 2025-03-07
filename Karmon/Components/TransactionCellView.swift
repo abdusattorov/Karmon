@@ -11,19 +11,6 @@ struct TransactionCellView: View {
     
     let transaction: Transaction
     
-//    func amountFormatted(amount: Double) -> String {
-//        let formatter = NumberFormatter()
-//        formatter.numberStyle = .currency
-//        formatter.usesGroupingSeparator = true
-//        formatter.locale = Locale(identifier: "en_US")
-//        
-//        if let result = formatter.string(from: amount as NSNumber) {
-//            return result
-//        }
-//        
-//        return ""
-//    }
-    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {

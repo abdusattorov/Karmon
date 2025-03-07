@@ -1,14 +1,16 @@
 //
-//  AddTransactionSheetVi.swift
+//  EditTransactionSheetView.swift
 //  Karmon
 //
-//  Created by Abdusamad Abdusattorov on 09/12/24.
+//  Created by Abdusamad Abdusattorov on 06/03/25.
 //
 
 import SwiftUI
 import SwiftData
 
-struct AddTransactionSheetView: View {
+struct EditTransactionSheetView: View {
+    
+    let transaction: Transaction
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
@@ -43,7 +45,12 @@ struct AddTransactionSheetView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
-                        let newTransaction = Transaction(title: title, amount: amount, currency: currency, dateCreated: date)
+                        let newTransaction = Transaction(
+                            title: title,
+                            amount: amount,
+                            currency: currency,
+                            dateCreated: date
+                        )
                         context.insert(newTransaction)
                         do {
                             try context.save()
@@ -55,9 +62,11 @@ struct AddTransactionSheetView: View {
                 }
             }
             .onAppear {
-                if let category = categories.first(where: { $0.title == "other" }) {
-                    selectedCategory = category
-                }
+                title = transaction.title
+                amount = transaction.amount
+                currency = transaction.currency
+                selectedCategory = transaction.category ?? categories.first(where: {$0.title == "other"})
+                date = transaction.dateCreated
             }
         }
         
@@ -65,5 +74,13 @@ struct AddTransactionSheetView: View {
 }
 
 #Preview {
-    AddTransactionSheetView()
+    
+    EditTransactionSheetView(
+        transaction: Transaction(
+            title: "Lemon tea",
+            amount: 0.8,
+            currency: "EUR",
+            dateCreated: .now
+        )
+    )
 }
