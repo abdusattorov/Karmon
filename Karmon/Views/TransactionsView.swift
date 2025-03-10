@@ -10,35 +10,74 @@ import SwiftData
 
 struct TransactionsView: View {
     
-//    var transactionVM: TransactionViewModel = TransactionViewModel.shared
-    
     @Environment(\.modelContext) var context
     @State private var addTransaction = false
+    @State private var editTransaction = false
+    @State private var selectedTransaction: Transaction? = nil
     @Query private var transactions: [Transaction]
     @Query private var categories: [Category]
+
+    private var groupedTransactions: [(key: Date, value: [Transaction])] {
+        let groupedDict = Dictionary(grouping: transactions) { transaction in
+            // Remove time components from the date
+            Calendar.current.startOfDay(for: transaction.dateCreated)
+        }
+        
+        // Sort by date descending
+        return groupedDict.sorted { $0.key > $1.key }
+    }
+    
+    // Cached formatter for currency formatting
+    private static let currencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        return formatter
+    }()
     
     var body: some View {
         
         NavigationStack {
             List {
-                ForEach(transactions) { transaction in
-                    VStack {
-                        Text(transaction.title)
-                    }
-                }
-                .onDelete { indexSet in
-                    for index in indexSet {
-                        let transaction = transactions[index]
-                        context.delete(transaction)
+                ForEach(groupedTransactions, id: \.key) { date, transactionsForDate in
+                    Section(
+                        header: Text(date.toSectionHeaderFormat())
+                            .foregroundStyle(.primary),
+                        footer: HStack {
+                            Spacer()
+                            Text("Total: \(totalAmountString(for: transactionsForDate))")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    ) {
+                        ForEach(transactionsForDate) { transaction in
+                            Button {
+                                selectedTransaction = transaction
+                                editTransaction.toggle()
+                            } label: {
+                                TransactionCellView(transaction: transaction)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .onDelete { indexSet in
+                            for index in indexSet {
+                                let transaction = transactionsForDate[index]
+                                context.delete(transaction)
+                            }
+                        }
                     }
                 }
             }
-            .listStyle(.inset)
+            .scrollIndicators(.hidden)
             
             .navigationTitle("Transactions")
             .sheet(isPresented: $addTransaction) {
                 AddTransactionSheetView()
             }
+            .sheet(isPresented: $editTransaction) {
+                EditTransactionSheetView(transaction: selectedTransaction ?? transactions[0])
+            }
+            
             .toolbar {
                 if !transactions.isEmpty {
                     Button("Add Transaction", systemImage: "plus") {
@@ -46,6 +85,7 @@ struct TransactionsView: View {
                     }
                 }
             }
+            
             .overlay {
                 if transactions.isEmpty {
                     ContentUnavailableView(label: {
@@ -61,10 +101,32 @@ struct TransactionsView: View {
                 }
             }
         }
-        
     }
+    
+    private func totalAmountString(for transactions: [Transaction]) -> String {
+        let total = transactions.reduce(0) { $0 + $1.amount }
+        
+        // Get the currency of the first transaction (assuming all transactions on a given day have the same currency)
+        let currencyCode = transactions.first?.currency ?? "USD" // Default to "USD" if no currency is found
+        
+        // Create a new formatter for each currency
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currencyCode // Use the currency of the first transaction
+        
+        return formatter.string(from: NSNumber(value: total)) ?? "$0.00"
+    }
+
 }
 
 #Preview {
-    TransactionsView()
+    let preview = Preview(Transaction.self)
+    let category = Category.categorySamples
+    let transactions = Transaction.transactionSamples
+    
+    preview.addExamples(category)
+    preview.addExamples(transactions)
+    
+    return TransactionsView()
+        .modelContainer(preview.container)
 }

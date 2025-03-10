@@ -35,7 +35,7 @@ struct EditTransactionSheetView: View {
                 TextField("Amount", value: $amount, format: .currency(code: "EUR"))
                     .keyboardType(.decimalPad)
             }
-            .navigationTitle("New Transaction")
+            .navigationTitle("Edit Transaction")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -45,11 +45,16 @@ struct EditTransactionSheetView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
+                        guard let selectedCategory else {
+                            return
+                        }
                         let newTransaction = Transaction(
+                            id: transaction.id,
                             title: title,
                             amount: amount,
                             currency: currency,
-                            dateCreated: date
+                            dateCreated: date,
+                            category: selectedCategory
                         )
                         context.insert(newTransaction)
                         do {
@@ -65,7 +70,7 @@ struct EditTransactionSheetView: View {
                 title = transaction.title
                 amount = transaction.amount
                 currency = transaction.currency
-                selectedCategory = transaction.category ?? categories.first(where: {$0.title == "other"})
+                selectedCategory = transaction.category
                 date = transaction.dateCreated
             }
         }
@@ -80,7 +85,8 @@ struct EditTransactionSheetView: View {
             title: "Lemon tea",
             amount: 0.8,
             currency: "EUR",
-            dateCreated: .now
+            dateCreated: .now,
+            category: Category(title: "other")
         )
     )
 }

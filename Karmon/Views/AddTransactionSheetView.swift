@@ -14,7 +14,7 @@ struct AddTransactionSheetView: View {
     @Environment(\.modelContext) var context
     @State private var title: String = ""
     @State private var date: Date = .now
-    @State private var amount: Double = 0
+    @State private var amount: Double?
     @State private var currency: String = "USD"
     @State private var selectedCategory: Category?
     @Query private var categories: [Category]
@@ -43,7 +43,11 @@ struct AddTransactionSheetView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
-                        let newTransaction = Transaction(title: title, amount: amount, currency: currency, dateCreated: date)
+                        guard let selectedCategory else {
+                            
+                            return
+                        }
+                        let newTransaction = Transaction(title: title, amount: amount ?? 0, currency: currency, dateCreated: date, category: selectedCategory)
                         context.insert(newTransaction)
                         do {
                             try context.save()
@@ -55,7 +59,7 @@ struct AddTransactionSheetView: View {
                 }
             }
             .onAppear {
-                if let category = categories.first(where: { $0.title == "other" }) {
+                if let category = categories.first(where: { $0.title == Constants.otherCategoryName }) {
                     selectedCategory = category
                 }
             }

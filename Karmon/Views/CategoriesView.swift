@@ -20,7 +20,7 @@ struct CategoriesView: View {
         NavigationStack {
             
             HStack {
-                TextField("Category name", text: $title)
+                TextField("New category", text: $title)
                     .textFieldStyle(.roundedBorder)
                     .frame(maxWidth: .infinity)
                 
@@ -50,13 +50,29 @@ struct CategoriesView: View {
                 } else {
                     List {
                         ForEach(categories) { category in
-                            Text(category.title)
+                            HStack {
+                                Text(category.title)
+//                                    .opacity(category.title == Constants.otherCategoryName ? 0.5 : 1)
+                                if category.title == Constants.otherCategoryName {
+                                    Spacer()
+                                    Text("default category")
+//                                        .italic()
+                                        .foregroundStyle(.secondary)
+                                        
+                                }
+                            }
+                            .deleteDisabled(category.title == Constants.otherCategoryName)
                         }
                         
                         .onDelete { indexSet in
                             for index in indexSet {
-                                let category = categories[index]
-                                context.delete(category)
+                                let categoryToDelete = categories[index]
+                                do {
+                                    try CategoryDataManager.shared.delete(category: categoryToDelete, in: context)
+                                } catch {
+                                    // Handle the error here, e.g., show an alert to the user.
+                                    print("Error deleting category: \(error.localizedDescription)")
+                                }
                             }
                         }
                     }
@@ -82,5 +98,11 @@ struct CategoriesView: View {
 }
 
 #Preview {
-    CategoriesView()
+    let preview = Preview(Category.self)
+    let category = Category.categorySamples
+    
+    preview.addExamples(category)
+    
+    return CategoriesView()
+        .modelContainer(preview.container)
 }
