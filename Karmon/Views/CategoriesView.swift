@@ -14,9 +14,15 @@ struct CategoriesView: View {
     @Environment(\.modelContext) var context
     @State private var title: String = ""
     @Query private var categories: [Category]
+    @State private var selectedCategory: Category?
+    @FocusState private var titleFocus: Bool
     
     private var isTitleValid: Bool {
         !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
+    var isEditing: Bool {
+        selectedCategory != nil
     }
     
     var body: some View {
@@ -27,8 +33,18 @@ struct CategoriesView: View {
                 TextField("New category", text: $title)
                     .textFieldStyle(.roundedBorder)
                     .frame(maxWidth: .infinity)
-                
-                Button("Add") {
+                    .focused($titleFocus)
+                    .onAppear {
+                        UITextField.appearance().clearButtonMode = .whileEditing
+                    }
+                if isEditing {
+                    Button("Cancel") {
+                        title = ""
+                        selectedCategory = nil
+                    }
+                    .buttonStyle(.bordered)
+                }
+                Button(isEditing ? "Save" : "Add") {
                     let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
                     guard !trimmedTitle.isEmpty else { return }
                     let newCategory = Category(title: trimmedTitle)
@@ -66,6 +82,21 @@ struct CategoriesView: View {
 //                                        .italic()
                                         .foregroundStyle(.secondary)
                                         
+                                } else {
+                                    Spacer()
+                                    Button {
+                                        
+                                    } label: {
+                                        Image(systemName: "pencil")
+                                            .imageScale(.large)
+                                    }
+                                }
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                if !(category.title == Constants.otherCategoryName) {
+                                    selectedCategory = category
+                                    title = category.title
                                 }
                             }
                             .deleteDisabled(category.title == Constants.otherCategoryName)
@@ -99,6 +130,9 @@ struct CategoriesView: View {
 //                    }
 //                }
 //            }
+            .onAppear {
+                titleFocus = true
+            }
         }
         
     }
