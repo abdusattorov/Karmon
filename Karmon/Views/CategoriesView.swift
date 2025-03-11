@@ -15,6 +15,10 @@ struct CategoriesView: View {
     @State private var title: String = ""
     @Query private var categories: [Category]
     
+    private var isTitleValid: Bool {
+        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
     var body: some View {
         
         NavigationStack {
@@ -25,7 +29,9 @@ struct CategoriesView: View {
                     .frame(maxWidth: .infinity)
                 
                 Button("Add") {
-                    let newCategory = Category(title: title)
+                    let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !trimmedTitle.isEmpty else { return }
+                    let newCategory = Category(title: trimmedTitle)
                     context.insert(newCategory)
                     do {
                         try context.save()
@@ -35,6 +41,7 @@ struct CategoriesView: View {
                     title = ""
                 }
                 .buttonStyle(.borderedProminent)
+                .disabled(!isTitleValid)
             }
             .padding()
             

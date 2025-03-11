@@ -23,6 +23,10 @@ struct EditTransactionSheetView: View {
     @FocusState private var amountFocus: Bool
     @FocusState private var titleFocus: Bool
     
+    private var isTitleValid: Bool {
+        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
     var body: some View {
         
         NavigationStack {
@@ -64,22 +68,27 @@ struct EditTransactionSheetView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
                         guard let selectedCategory else {
+                            
                             return
                         }
+                        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !trimmedTitle.isEmpty else { return }
                         let newTransaction = Transaction(
-                            id: transaction.id,
-                            title: title,
+                            title: trimmedTitle,
                             amount: amount,
                             currency: currency,
                             dateCreated: date,
                             category: selectedCategory
                         )
+                        
                         context.insert(newTransaction)
+                        
                         do {
                             try context.save()
                         } catch {
                             print("Failed to save.")
                         }
+                        
                         dismiss()
                     }
                     .disabled(title.isEmpty || amount.isLessThanOrEqualTo(0))

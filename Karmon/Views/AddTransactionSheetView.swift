@@ -21,6 +21,10 @@ struct AddTransactionSheetView: View {
     @FocusState private var amountFocus: Bool
     @FocusState private var titleFocus: Bool
     
+    private var isTitleValid: Bool {
+        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
     var body: some View {
         
         NavigationStack {
@@ -65,16 +69,27 @@ struct AddTransactionSheetView: View {
                             
                             return
                         }
-                        let newTransaction = Transaction(title: title, amount: amount ?? 0, currency: currency, dateCreated: date, category: selectedCategory)
+                        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !trimmedTitle.isEmpty else { return }
+                        let newTransaction = Transaction(
+                            title: trimmedTitle,
+                            amount: amount ?? 0,
+                            currency: currency,
+                            dateCreated: date,
+                            category: selectedCategory
+                        )
+                        
                         context.insert(newTransaction)
+                        
                         do {
                             try context.save()
                         } catch {
                             print("Failed to save.")
                         }
+                        
                         dismiss()
                     }
-                    .disabled(title.isEmpty || amount == nil || amount! <= 0)
+                    .disabled(!isTitleValid || amount == nil || amount! <= 0)
                 }
             }
             .onAppear {

@@ -12,8 +12,8 @@ struct TransactionsView: View {
     
     @Environment(\.modelContext) var context
     @State private var addTransaction = false
-    @State private var editTransaction = false
-    @State private var selectedTransaction: Transaction? = nil
+//    @State private var editTransaction = false
+    @State private var selectedTransaction: Transaction?
     @Query private var transactions: [Transaction]
     @Query private var categories: [Category]
 
@@ -50,14 +50,20 @@ struct TransactionsView: View {
                         }
                     ) {
                         ForEach(transactionsForDate) { transaction in
-                            Button {
-                                selectedTransaction = transaction
-                                editTransaction.toggle()
-                            } label: {
-                                TransactionCellView(transaction: transaction)
-                                    .contentShape(Rectangle())
-                            }
-                            .buttonStyle(.plain)
+//                            Button {
+//                                selectedTransaction = transaction
+//                                editTransaction.toggle()
+//                            } label: {
+//                                TransactionCellView(transaction: transaction)
+//                                    .contentShape(Rectangle())
+//                            }
+//                            .buttonStyle(.plain)
+                            TransactionCellView(transaction: transaction)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    selectedTransaction = transaction
+//                                    editTransaction.toggle()
+                                }
                         }
                         .onDelete { indexSet in
                             for index in indexSet {
@@ -74,8 +80,8 @@ struct TransactionsView: View {
             .sheet(isPresented: $addTransaction) {
                 AddTransactionSheetView()
             }
-            .sheet(isPresented: $editTransaction) {
-                EditTransactionSheetView(transaction: selectedTransaction ?? transactions[0])
+            .sheet(item: $selectedTransaction) { transaction in
+                EditTransactionSheetView(transaction: transaction)
             }
             
             .toolbar {
