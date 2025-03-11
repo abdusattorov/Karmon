@@ -16,6 +16,8 @@ struct CategoriesView: View {
     @Query private var categories: [Category]
     @State private var selectedCategory: Category?
     @FocusState private var titleFocus: Bool
+    @State private var showDeleteAlert: Bool = false
+    @State private var indexSetToDelete: IndexSet?
     
     private var isTitleValid: Bool {
         !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -45,16 +47,23 @@ struct CategoriesView: View {
                     .buttonStyle(.bordered)
                 }
                 Button(isEditing ? "Save" : "Add") {
-                    let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
-                    guard !trimmedTitle.isEmpty else { return }
-                    let newCategory = Category(title: trimmedTitle)
-                    context.insert(newCategory)
-                    do {
-                        try context.save()
-                    } catch {
-                        print("Failed to save.")
+                    if isEditing {
+                        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                        selectedCategory?.title = trimmedTitle
+                        title = ""
+                        selectedCategory = nil
+                    } else {
+                        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !trimmedTitle.isEmpty else { return }
+                        let newCategory = Category(title: trimmedTitle)
+                        context.insert(newCategory)
+                        do {
+                            try context.save()
+                        } catch {
+                            print("Failed to save.")
+                        }
+                        title = ""
                     }
-                    title = ""
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(!isTitleValid)
@@ -89,6 +98,7 @@ struct CategoriesView: View {
                                     } label: {
                                         Image(systemName: "pencil")
                                             .imageScale(.large)
+                                            .foregroundStyle(.secondary)
                                     }
                                 }
                             }
@@ -103,15 +113,22 @@ struct CategoriesView: View {
                         }
                         
                         .onDelete { indexSet in
-                            for index in indexSet {
-                                let categoryToDelete = categories[index]
-                                do {
-                                    try CategoryDataManager.shared.delete(category: categoryToDelete, in: context)
-                                } catch {
-                                    // Handle the error here, e.g., show an alert to the user.
-                                    print("Error deleting category: \(error.localizedDescription)")
-                                }
+                            withAnimation {
+                                self.showDeleteAlert = true
+                                self.indexSetToDelete = indexSet
                             }
+                        }
+                        .alert(isPresented: $showDeleteAlert) {
+                            Alert(
+                                title: Text("Confirm Deletion"),
+                                message: Text("Are you sure you want to delete?"),
+                                primaryButton: 
+                                        .destructive(Text("Delete")) {
+                                            guard let indexSetToDelete else { return }
+                                            delete(indexset: indexSetToDelete)
+                                        },
+                                secondaryButton: 
+                                        .cancel())
                         }
                     }
                     .listStyle(.inset)
@@ -135,6 +152,18 @@ struct CategoriesView: View {
             }
         }
         
+    }
+    
+    func delete(indexset: IndexSet) {
+        for index in indexset {
+            let categoryToDelete = categories[index]
+            do {
+                try CategoryDataManager.shared.delete(category: categoryToDelete, in: context)
+            } catch {
+                // Handle the error here, e.g., show an alert to the user.
+                print("Error deleting category: \(error.localizedDescription)")
+            }
+        }
     }
 }
 
