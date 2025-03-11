@@ -18,20 +18,38 @@ struct AddTransactionSheetView: View {
     @State private var currency: String = "USD"
     @State private var selectedCategory: Category?
     @Query private var categories: [Category]
+    @FocusState private var amountFocus: Bool
+    @FocusState private var titleFocus: Bool
     
     var body: some View {
         
         NavigationStack {
             Form {
+                TextField("Amount", value: $amount, format: .currency(code: currency))
+                    .keyboardType(.decimalPad)
+                    .focused($amountFocus)
+                    .toolbar {
+                        if amountFocus == true && (amount != nil) {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()
+                                Button("Next") {
+                                    amountFocus = false
+                                    titleFocus = true
+                                }
+                            }
+                        }
+                    }
                 TextField("Title", text: $title)
+                    .focused($titleFocus)
+                    .onAppear {
+                        UITextField.appearance().clearButtonMode = .whileEditing
+                    }
                 Picker("Category", selection: $selectedCategory) {
                     ForEach(categories) { category in
                         Text("\(category.title)").tag(category)
                     }
                 }
-                DatePicker("Date", selection: $date, displayedComponents: .date)
-                TextField("Amount", value: $amount, format: .currency(code: "EUR"))
-                    .keyboardType(.decimalPad)
+                DatePicker("Date", selection: $date, in: ...Date.now, displayedComponents: .date)
             }
             .navigationTitle("New Transaction")
             .navigationBarTitleDisplayMode(.inline)
@@ -56,12 +74,14 @@ struct AddTransactionSheetView: View {
                         }
                         dismiss()
                     }
+                    .disabled(title.isEmpty || amount == nil || amount! <= 0)
                 }
             }
             .onAppear {
                 if let category = categories.first(where: { $0.title == Constants.otherCategoryName }) {
                     selectedCategory = category
                 }
+                amountFocus = true
             }
         }
         

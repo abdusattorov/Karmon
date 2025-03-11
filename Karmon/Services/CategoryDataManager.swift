@@ -26,7 +26,7 @@ final class CategoryDataManager {
     // The default category title used across the app
     private let defaultCategoryTitle = Constants.otherCategoryName
     
-    // MARK: - Delete Category with Reassignment Logic
+    // Delete Category with Reassignment Logic
     func delete(category: Category, in context: ModelContext) throws {
         // Prevent deletion of the default "other" category.
         if category.title == defaultCategoryTitle {
