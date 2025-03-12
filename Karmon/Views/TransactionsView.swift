@@ -131,15 +131,15 @@ struct TransactionsView: View {
     }
 
 }
-
-#Preview {
-    let preview = Preview(Transaction.self)
-    let category = Category.categorySamples
-    let transactions = Transaction.transactionSamples
-    
-    preview.addExamples(category)
-    preview.addExamples(transactions)
-    
-    return TransactionsView()
-        .modelContainer(preview.container)
-}
+//
+//#Preview {
+//    let preview = Preview(Transaction.self)
+//    let category = Category.categorySamples
+//    let transactions = Transaction.transactionSamples
+//    
+//    preview.addExamples(category)
+//    preview.addExamples(transactions)
+//    
+//    return TransactionsView()
+//        .modelContainer(preview.container)
+//}

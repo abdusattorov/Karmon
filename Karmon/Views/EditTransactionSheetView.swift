@@ -77,6 +77,7 @@ struct EditTransactionSheetView: View {
                         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
                         guard !trimmedTitle.isEmpty else { return }
                         let newTransaction = Transaction(
+                            id: transaction.id,
                             title: trimmedTitle,
                             amount: amount,
                             currency: currency,

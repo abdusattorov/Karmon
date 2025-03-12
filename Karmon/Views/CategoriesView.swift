@@ -167,12 +167,12 @@ struct CategoriesView: View {
     }
 }
 
-#Preview {
-    let preview = Preview(Category.self)
-    let category = Category.categorySamples
-    
-    preview.addExamples(category)
-    
-    return CategoriesView()
-        .modelContainer(preview.container)
-}
+//#Preview {
+//    let preview = Preview(Category.self)
+//    let category = Category.categorySamples
+//    
+//    preview.addExamples(category)
+//    
+//    return CategoriesView()
+//        .modelContainer(preview.container)
+//}
