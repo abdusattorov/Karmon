@@ -17,7 +17,7 @@ struct EditTransactionSheetView: View {
     @State private var title: String = ""
     @State private var date: Date = .now
     @State private var amount: Double = 0
-    @State private var currency: String = "USD"
+    @State private var currency: String = getDefaultCurrency()
     @State private var selectedCategory: Category?
     @Query private var categories: [Category]
     @FocusState private var amountFocus: Bool
@@ -56,6 +56,9 @@ struct EditTransactionSheetView: View {
                     }
                 }
                 DatePicker("Date", selection: $date, in: ...Date.now, displayedComponents: .date)
+            }
+            .onAppear {
+                currency = getDefaultCurrency() // Set default currency when the view appears
             }
             .navigationTitle("Edit Transaction")
             .navigationBarTitleDisplayMode(.inline)

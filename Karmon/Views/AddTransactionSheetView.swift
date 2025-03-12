@@ -15,7 +15,7 @@ struct AddTransactionSheetView: View {
     @State private var title: String = ""
     @State private var date: Date = .now
     @State private var amount: Double?
-    @State private var currency: String = "USD"
+    @State private var currency: String = getDefaultCurrency()
     @State private var selectedCategory: Category?
     @Query private var categories: [Category]
     @FocusState private var amountFocus: Bool

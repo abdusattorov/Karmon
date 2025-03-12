@@ -8,21 +8,33 @@
 import SwiftUI
 
 struct TransactionCellView: View {
-    
     let transaction: Transaction
-//    let category: Category
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Text(transaction.title)
                 Spacer()
-                Text(transaction.amount, format: .currency(code: transaction.currency))
+                Text(formattedAmount(transaction.amount, currencyCode: transaction.currency))
             }
             Text(transaction.category.title)
                 .foregroundStyle(.gray)
                 .font(.caption)
         }
+    }
+    
+    private func currencyFormatter(for currencyCode: String) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currencyCode
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }
+
+    private func formattedAmount(_ amount: Double, currencyCode: String) -> String {
+        let formatter = currencyFormatter(for: currencyCode)
+        return formatter.string(from: NSNumber(value: amount)) ?? "$0"
     }
 }
 

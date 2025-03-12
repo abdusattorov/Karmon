@@ -28,11 +28,13 @@ struct TransactionsView: View {
     }
     
     // Cached formatter for currency formatting
-    private static let currencyFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        return formatter
-    }()
+//    private static let currencyFormatter: NumberFormatter = {
+//        let formatter = NumberFormatter()
+//        formatter.numberStyle = .currency
+//        formatter.minimumFractionDigits = 0
+//        formatter.maximumFractionDigits = 2
+//        return formatter
+//    }()
     
     var body: some View {
         
@@ -110,17 +112,22 @@ struct TransactionsView: View {
     }
     
     private func totalAmountString(for transactions: [Transaction]) -> String {
-        let total = transactions.reduce(0) { $0 + $1.amount }
+        // Calculate the total amount for each currency
+        let currencyTotals = Dictionary(grouping: transactions, by: { $0.currency })
+            .mapValues { $0.reduce(0) { $0 + $1.amount } }
         
-        // Get the currency of the first transaction (assuming all transactions on a given day have the same currency)
-        let currencyCode = transactions.first?.currency ?? "USD" // Default to "USD" if no currency is found
-        
-        // Create a new formatter for each currency
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = currencyCode // Use the currency of the first transaction
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
         
-        return formatter.string(from: NSNumber(value: total)) ?? "$0.00"
+        // Format each total amount
+        let formattedTotals = currencyTotals.compactMap { currency, total -> String? in
+            formatter.currencyCode = currency
+            return formatter.string(from: NSNumber(value: total))
+        }
+        
+        return formattedTotals.joined(separator: "; ")
     }
 
 }
