@@ -14,9 +14,14 @@ struct AddTransactionSheetView: View {
     @Environment(\.modelContext) var context
     @State private var title: String = ""
     @State private var date: Date = .now
+    
     @State private var amount: Double?
-    @State private var amountText: String = ""
-    @State private var currency: String = getDefaultCurrency()
+    @State private var lastAmount: Double = 0
+    @State private var maxAmount: Double = 10_000_000_000
+    
+    @State private var selectedCurrency: String = getDefaultCurrency()
+    @State private var currencies: [String] = getAllCurrencies()
+    
     @State private var selectedCategory: Category?
     @Query private var categories: [Category]
     @FocusState private var amountFocus: Bool
@@ -30,100 +35,84 @@ struct AddTransactionSheetView: View {
         
         NavigationStack {
             Form {
-                TextField("Amount", text: $amountText)
-                    .keyboardType(.decimalPad)
-                    .focused($amountFocus)
-                    .onChange(of: amountText) {
-                            // Allow only digits and a decimal separator.
-                            let allowedCharacters = "0123456789.,"
-                            let filtered = amountText.filter { allowedCharacters.contains($0) }
-                            if filtered != amountText {
-                                amountText = filtered
-                            }
-                            
-                            // Enforce the character limit.
-                            if amountText.count > 10 {
-                                amountText = String(amountText.prefix(10))
-                            }
-                            
-                            // Convert to Double.
-                            let normalizedText = amountText.replacingOccurrences(of: ",", with: ".")
-                            if let value = Double(normalizedText) {
-                                amount = value
-                            } else {
-                                amount = nil
+                HStack {
+                    Menu {
+                        Picker("", selection: $selectedCurrency) {
+                            ForEach(currencies, id: \.self) { currency in
+                                Text(currency)
                             }
                         }
-//                        .onChange(of: amountFocus) {
-//                            if !amountFocus {
-//                                // When editing ends, format the value.
-//                                if let value = amount {
-//                                    let formatter = NumberFormatter()
-//                                    formatter.numberStyle = .currency
-//                                    formatter.currencyCode = currency
-//                                    formatter.minimumFractionDigits = 0
-//                                    formatter.maximumFractionDigits = 2
-//                                    if let formatted = formatter.string(from: NSNumber(value: value)) {
-//                                        amountText = formatted
-//                                    }
-//                                }
-//                            } else {
-//                                // When editing begins, revert to a plain number.
-//                                if let value = amount {
-//                                    amountText = String(value)
-//                                }
-//                            }
-//                        }
-                    .toolbar {
-                        if amountFocus == true && (amount != nil) {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Spacer()
-                                Button("Next") {
-                                    amountFocus = false
-                                    titleFocus = true
+                    } label: {
+                        HStack {
+                            Text(selectedCurrency)
+                                .font(.footnote)
+                        }
+                        .padding(8)
+                        .foregroundStyle(.white)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.tertiarySystemFill)))
+                    }
+                    
+                    TextField("Amount", value: $amount, format: .number)
+                        .keyboardType(.decimalPad)
+                        .focused($amountFocus)
+                        .onChange(of: amount) {
+                            guard var amount else { return }
+                            if amount < maxAmount {
+                                lastAmount = amount
+                            } else {
+                                amount = lastAmount
+                            }
+                        }
+                        .toolbar {
+                            if amountFocus == true {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("Next") {
+                                        amountFocus = false
+                                        titleFocus = true
+                                    }
                                 }
                             }
                         }
-                    }
-//                CurrencyTextField(value: $amount, currencyCode: currency)
-//                    .focused($amountFocus)
-//                    .toolbar {
-//                        if amountFocus && amount != nil {
-//                            ToolbarItemGroup(placement: .keyboard) {
-//                                Spacer()
-//                                Button("Next") {
-//                                    amountFocus = false
-//                                    titleFocus = true
-//                                }
-//                            }
-//                        }
-//                    }
-                TextField("Title", text: $title)
-                    .focused($titleFocus)
-                    .onAppear {
-                        UITextField.appearance().clearButtonMode = .whileEditing
-                    }
-                    .overlay(
-                        title.isEmpty || !titleFocus || title.count == 32 ? nil :
-                        HStack {
-                            Spacer()
-                            Text("\(32 - title.count)")
-                                .foregroundColor(.secondary)
-                                .padding(.trailing, 30)
+                }
+                HStack {
+                    Image(systemName: "text.word.spacing")
+                        .padding(.horizontal, 11)
+                    TextField("Title", text: $title)
+                        .focused($titleFocus)
+                        .onAppear {
+                            UITextField.appearance().clearButtonMode = .whileEditing
                         }
-                    )
-                    .onChange(of: title) {
-                        if title.count > 32 {
-                            title = String(title.prefix(32))
+                        .overlay(
+                            title.isEmpty || !titleFocus || title.count == 32 ? nil :
+                            HStack {
+                                Spacer()
+                                Text("\(32 - title.count)")
+                                    .foregroundColor(.secondary)
+                                    .padding(.trailing, 30)
+                            }
+                        )
+                        .onChange(of: title) {
+                            if title.count > 32 {
+                                title = String(title.prefix(32))
+                            }
                         }
-                    }
-                
-                Picker("Category", selection: $selectedCategory) {
-                    ForEach(categories) { category in
-                        Text("\(category.title)").tag(category)
+                }
+                    
+                HStack {
+                    Image(systemName: "folder")
+                        .padding(.horizontal, 11)
+                    Picker("Category", selection: $selectedCategory) {
+                        ForEach(categories) { category in
+                            Text("\(category.title)").tag(category)
+                        }
                     }
                 }
-                DatePicker("Date", selection: $date, in: ...Date.now, displayedComponents: .date)
+                HStack {
+                    Image(systemName: "calendar")
+                        .padding(.horizontal, 11)
+                    DatePicker("Date", selection: $date, in: ...Date.now, displayedComponents: .date)
+                }
             }
             .navigationTitle("New Transaction")
             .navigationBarTitleDisplayMode(.inline)
@@ -144,7 +133,7 @@ struct AddTransactionSheetView: View {
                         let newTransaction = Transaction(
                             title: trimmedTitle,
                             amount: amount ?? 0,
-                            currency: currency,
+                            currency: selectedCurrency,
                             dateCreated: date,
                             category: selectedCategory
                         )

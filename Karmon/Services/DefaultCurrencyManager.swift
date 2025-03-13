@@ -16,3 +16,7 @@ func saveDefaultCurrency(currency: String) {
 func getDefaultCurrency() -> String {
     return UserDefaults.standard.string(forKey: defaultCurrencyKey) ?? "USD"
 }
+
+func getAllCurrencies() -> [String] {
+    return ["UZS", "USD", "EUR", "GBP", "PLN", "HUF", "KRW"]
+}

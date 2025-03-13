@@ -24,7 +24,6 @@
 		073B85A72D7F21E400DF8156 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073B85A62D7F21E400DF8156 /* Constants.swift */; };
 		073B85CB2D810D4E00DF8156 /* CurrenciesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073B85CA2D810D4E00DF8156 /* CurrenciesView.swift */; };
 		073B85CD2D810D8700DF8156 /* DefaultCurrencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073B85CC2D810D8700DF8156 /* DefaultCurrencyManager.swift */; };
-		073B85CF2D818E7D00DF8156 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073B85CE2D818E7D00DF8156 /* CurrencyTextField.swift */; };
 		0787207B2D7BBE7500F5E399 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078720792D7BBE7500F5E399 /* DateFormatter.swift */; };
 		078AAE992D79AAAD0080073E /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078AAE982D79AAAD0080073E /* CategoriesView.swift */; };
 		078AAE9D2D79F2BE0080073E /* EditTransactionSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078AAE9C2D79F2BE0080073E /* EditTransactionSheetView.swift */; };
@@ -49,7 +48,6 @@
 		073B85A62D7F21E400DF8156 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		073B85CA2D810D4E00DF8156 /* CurrenciesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesView.swift; sourceTree = "<group>"; };
 		073B85CC2D810D8700DF8156 /* DefaultCurrencyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyManager.swift; sourceTree = "<group>"; };
-		073B85CE2D818E7D00DF8156 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		078720792D7BBE7500F5E399 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		078AAE982D79AAAD0080073E /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		078AAE9C2D79F2BE0080073E /* EditTransactionSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTransactionSheetView.swift; sourceTree = "<group>"; };
@@ -135,7 +133,6 @@
 			isa = PBXGroup;
 			children = (
 				0721C4712D09877E00A32EDF /* TransactionCellView.swift */,
-				073B85CE2D818E7D00DF8156 /* CurrencyTextField.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -248,7 +245,6 @@
 				073B85A52D7F214900DF8156 /* CategoryDataManager.swift in Sources */,
 				0721C4502D0748FE00A32EDF /* Transaction.swift in Sources */,
 				073A73C32D7BD3C4004491FF /* PreviewContainer.swift in Sources */,
-				073B85CF2D818E7D00DF8156 /* CurrencyTextField.swift in Sources */,
 				073A73BD2D7BC412004491FF /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

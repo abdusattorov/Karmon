@@ -12,14 +12,12 @@ struct TransactionsView: View {
     
     @Environment(\.modelContext) var context
     @State private var addTransaction = false
-//    @State private var editTransaction = false
     @State private var selectedTransaction: Transaction?
     @Query private var transactions: [Transaction]
     @Query private var categories: [Category]
 
     private var groupedTransactions: [(key: Date, value: [Transaction])] {
         let groupedDict = Dictionary(grouping: transactions) { transaction in
-            // Remove time components from the date
             Calendar.current.startOfDay(for: transaction.dateCreated)
         }
         
@@ -52,19 +50,10 @@ struct TransactionsView: View {
                         }
                     ) {
                         ForEach(transactionsForDate) { transaction in
-//                            Button {
-//                                selectedTransaction = transaction
-//                                editTransaction.toggle()
-//                            } label: {
-//                                TransactionCellView(transaction: transaction)
-//                                    .contentShape(Rectangle())
-//                            }
-//                            .buttonStyle(.plain)
                             TransactionCellView(transaction: transaction)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     selectedTransaction = transaction
-//                                    editTransaction.toggle()
                                 }
                         }
                         .onDelete { indexSet in
@@ -127,19 +116,19 @@ struct TransactionsView: View {
             return formatter.string(from: NSNumber(value: total))
         }
         
-        return formattedTotals.joined(separator: " & ")
+        return formattedTotals.joined(separator: "; ")
     }
 
 }
-//
-//#Preview {
-//    let preview = Preview(Transaction.self)
-//    let category = Category.categorySamples
-//    let transactions = Transaction.transactionSamples
-//    
-//    preview.addExamples(category)
-//    preview.addExamples(transactions)
-//    
-//    return TransactionsView()
-//        .modelContainer(preview.container)
-//}
+
+#Preview {
+    let preview = Preview(Transaction.self)
+    let category = Category.categorySamples
+    let transactions = Transaction.transactionSamples
+    
+    preview.addExamples(category)
+    preview.addExamples(transactions)
+    
+    return TransactionsView()
+        .modelContainer(preview.container)
+}

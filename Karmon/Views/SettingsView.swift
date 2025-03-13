@@ -33,7 +33,7 @@ struct SettingsView: View {
                     NavigationLink {
                         CategoriesView()
                     } label: {
-                        Image(systemName: "bag.fill")
+                        Image(systemName: "folder.fill")
                             .foregroundStyle(.white)
                             .frame(width: 32, height: 32)
                             .background(.blue)
@@ -49,10 +49,26 @@ struct SettingsView: View {
                             .background(.blue)
                             .cornerRadius(8)
                         Text("Default Currency")
-                        Picker("", selection: $selectedCurrency) {
-                            ForEach(currencies, id: \.self) { currency in
-                                Text(currency)
+//                        Picker("", selection: $selectedCurrency) {
+//                            ForEach(currencies, id: \.self) { currency in
+//                                Text(currency)
+//                            }
+//                        }
+                        Menu {
+                            Picker("", selection: $selectedCurrency) {
+                                ForEach(currencies, id: \.self) { currency in
+                                    Text(currency)
+                                }
                             }
+                        } label: {
+                            Spacer()
+                            HStack {
+                                Text(selectedCurrency)
+                                    .font(.footnote)
+                            }
+                            .padding(8)
+                            .foregroundStyle(.white)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.tertiarySystemFill)))
                         }
                         .onChange(of: selectedCurrency) {
                             saveDefaultCurrency(currency: selectedCurrency)

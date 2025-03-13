@@ -16,9 +16,15 @@ struct EditTransactionSheetView: View {
     @Environment(\.modelContext) var context
     @State private var title: String = ""
     @State private var date: Date = .now
+    
     @State private var amount: Double = 0
-    @State private var amountText: String = ""
-    @State private var currency: String = getDefaultCurrency()
+    @State private var lastAmount: Double = 0
+    @State private var maxAmount: Double = 10_000_000_000
+//    @State private var amountText = ""
+    
+    @State private var selectedCurrency: String = ""
+    @State private var currencies: [String] = getAllCurrencies()
+    
     @State private var selectedCategory: Category?
     @Query private var categories: [Category]
     @FocusState private var amountFocus: Bool
@@ -32,71 +38,102 @@ struct EditTransactionSheetView: View {
         
         NavigationStack {
             Form {
-                TextField("Amount", value: $amount, format: .currency(code: currency))
-                    .keyboardType(.decimalPad)
-                    .focused($amountFocus)
-                    .onChange(of: amountText) {
-                        // Allow only digits and a decimal separator (adjust if your locale uses comma)
-                        let allowedCharacters = "0123456789.,"
-                        let filtered = amountText.filter { allowedCharacters.contains($0) }
-                        if filtered != amountText {
-                            amountText = filtered
+                HStack {
+                    Menu {
+                        Picker("", selection: $selectedCurrency) {
+                            ForEach(currencies, id: \.self) { currency in
+                                Text(currency)
+                            }
                         }
-                        
-                        // Enforce the character limit
-                        if amountText.count > 10 {
-                            amountText = String(amountText.prefix(10))
+                    } label: {
+                        HStack {
+                            Text(selectedCurrency)
+                                .font(.footnote)
                         }
-                        
-                        // Convert the text to a Double.
-                        // Replace comma with dot if needed for conversion.
-                        let normalizedText = amountText.replacingOccurrences(of: ",", with: ".")
-                        if let value = Double(normalizedText) {
-                            amount = value
-                        } else {
-                            amount = 0
-                        }
+                        .padding(8)
+                        .foregroundStyle(.white)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.tertiarySystemFill)))
                     }
-                    .toolbar {
-                        if amountFocus == true {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Spacer()
-                                Button("Next") {
-                                    amountFocus = false
-                                    titleFocus = true
+                    
+                    TextField("Amount", value: $amount, format: .number)
+                        .keyboardType(.decimalPad)
+                        .focused($amountFocus)
+                        .onChange(of: amount) {
+                            if amount < maxAmount {
+                                lastAmount = amount
+                            } else {
+                                amount = lastAmount
+                            }
+                        }
+//                        .onChange(of: amountText) {
+//                                // Allow only digits and a decimal separator.
+//                                let allowedCharacters = "0123456789.,"
+//                                let filtered = amountText.filter { allowedCharacters.contains($0) }
+//                                if filtered != amountText {
+//                                    amountText = filtered
+//                                }
+//                                
+//                                // Convert to Double.
+//                                let normalizedText = amountText.replacingOccurrences(of: ",", with: ".")
+//                                if let value = Double(normalizedText) {
+//                                    amount = value
+//                                } else {
+//                                    amount = 0
+//                                }
+//                            }
+                        .toolbar {
+                            if amountFocus == true {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("Next") {
+                                        amountFocus = false
+                                        titleFocus = true
+                                    }
                                 }
                             }
                         }
-                    }
-                TextField("Title", text: $title)
-                    .focused($titleFocus)
-                    .onAppear {
-                        UITextField.appearance().clearButtonMode = .whileEditing
-                    }
-                    .overlay(
-                        title.isEmpty || !titleFocus || title.count == 32 ? nil :
-                        HStack {
-                            Spacer()
-                            Text("\(32 - title.count)")
-                                .foregroundColor(.secondary)
-                                .padding(.trailing, 30)
+                }
+                HStack {
+                    Image(systemName: "text.word.spacing")
+                        .padding(.horizontal, 11)
+                    TextField("Title", text: $title)
+                        .focused($titleFocus)
+                        .onAppear {
+                            UITextField.appearance().clearButtonMode = .whileEditing
                         }
-                    )
-                    .onChange(of: title) {
-                        if title.count > 32 {
-                            title = String(title.prefix(32))
+                        .overlay(
+                            title.isEmpty || !titleFocus || title.count == 32 ? nil :
+                            HStack {
+                                Spacer()
+                                Text("\(32 - title.count)")
+                                    .foregroundColor(.secondary)
+                                    .padding(.trailing, 30)
+                            }
+                        )
+                        .onChange(of: title) {
+                            if title.count > 32 {
+                                title = String(title.prefix(32))
+                            }
                         }
-                    }
+                }
                     
-                Picker("Category", selection: $selectedCategory) {
-                    ForEach(categories) { category in
-                        Text("\(category.title)").tag(category)
+                HStack {
+                    Image(systemName: "folder")
+                        .padding(.horizontal, 11)
+                    Picker("Category", selection: $selectedCategory) {
+                        ForEach(categories) { category in
+                            Text("\(category.title)").tag(category)
+                        }
                     }
                 }
-                DatePicker("Date", selection: $date, in: ...Date.now, displayedComponents: .date)
+                HStack {
+                    Image(systemName: "calendar")
+                        .padding(.horizontal, 11)
+                    DatePicker("Date", selection: $date, in: ...Date.now, displayedComponents: .date)
+                }
             }
             .onAppear {
-                currency = getDefaultCurrency() // Set default currency when the view appears
+                selectedCurrency = transaction.currency
             }
             .navigationTitle("Edit Transaction")
             .navigationBarTitleDisplayMode(.inline)
@@ -118,7 +155,7 @@ struct EditTransactionSheetView: View {
                             id: transaction.id,
                             title: trimmedTitle,
                             amount: amount,
-                            currency: currency,
+                            currency: selectedCurrency,
                             dateCreated: date,
                             category: selectedCategory
                         )
@@ -139,7 +176,7 @@ struct EditTransactionSheetView: View {
             .onAppear {
                 title = transaction.title
                 amount = transaction.amount
-                currency = transaction.currency
+                selectedCurrency = transaction.currency
                 selectedCategory = transaction.category
                 date = transaction.dateCreated
                 amountFocus = true
@@ -154,7 +191,7 @@ struct EditTransactionSheetView: View {
     EditTransactionSheetView(
         transaction: Transaction(
             title: "Lemon tea",
-            amount: 0.8,
+            amount: 10_000_000,
             currency: "EUR",
             dateCreated: .now,
             category: Category(title: "other")
