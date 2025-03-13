@@ -11,19 +11,12 @@ import SwiftData
 struct TransactionsView: View {
     
     @Environment(\.modelContext) var context
-    @State private var addTransaction = false
-    @State private var selectedTransaction: Transaction?
     @Query private var transactions: [Transaction]
     @Query private var categories: [Category]
-
-    private var groupedTransactions: [(key: Date, value: [Transaction])] {
-        let groupedDict = Dictionary(grouping: transactions) { transaction in
-            Calendar.current.startOfDay(for: transaction.dateCreated)
-        }
-        
-        // Sort by date descending
-        return groupedDict.sorted { $0.key > $1.key }
-    }
+//    @State private var selectedTransaction: Transaction?
+    @State private var addTransaction = false
+    @State private var searchText: String = ""
+    @State private var selectedCategory: String = "All"
     
     // Cached formatter for currency formatting
 //    private static let currencyFormatter: NumberFormatter = {
@@ -37,96 +30,62 @@ struct TransactionsView: View {
     var body: some View {
         
         NavigationStack {
-            List {
-                ForEach(groupedTransactions, id: \.key) { date, transactionsForDate in
-                    Section(
-                        header: Text(date.toSectionHeaderFormat())
-                            .foregroundStyle(.primary),
-                        footer: HStack {
-                            Spacer()
-                            Text("Total: \(totalAmountString(for: transactionsForDate))")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                    ) {
-                        ForEach(transactionsForDate) { transaction in
-                            TransactionCellView(transaction: transaction)
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    selectedTransaction = transaction
+            
+            TransactionListView(filterBy: selectedCategory, searchString: searchText)
+            
+                .searchable(text: $searchText)
+                .navigationTitle("Transactions")
+                .sheet(isPresented: $addTransaction) {
+                    AddTransactionSheetView()
+                }
+            
+                .toolbar {
+                    if !transactions.isEmpty {
+                        
+                        Menu {
+                            Picker("Category", selection: $selectedCategory) {
+                                Text("All").tag("All")
+                                ForEach(categories) { category in
+                                    Text("\(category.title)").tag(category.title)
                                 }
-                        }
-                        .onDelete { indexSet in
-                            for index in indexSet {
-                                let transaction = transactionsForDate[index]
-                                context.delete(transaction)
                             }
+                        } label: {
+                            Image(
+                                systemName: selectedCategory == "All" || selectedCategory == "" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill"
+                            )
                         }
-                    }
-                }
-            }
-            .scrollIndicators(.hidden)
-            
-            .navigationTitle("Transactions")
-            .sheet(isPresented: $addTransaction) {
-                AddTransactionSheetView()
-            }
-            .sheet(item: $selectedTransaction) { transaction in
-                EditTransactionSheetView(transaction: transaction)
-            }
-            
-            .toolbar {
-                if !transactions.isEmpty {
-                    Button("Add Transaction", systemImage: "plus") {
-                        addTransaction.toggle()
-                    }
-                }
-            }
-            
-            .overlay {
-                if transactions.isEmpty {
-                    ContentUnavailableView(label: {
-                        Label("No Transactions", systemImage: "list.bullet.rectangle.portrait")
-                    }, description: {
-                        Text("Start adding transactions to see your list")
-                    }, actions: {
-                        Button("Add Transaction") {
+                        
+                        Button("Add Transaction", systemImage: "plus") {
                             addTransaction.toggle()
                         }
-                    })
-                    .offset(y: -60)
+                        
+                    }
                 }
-            }
+            
+                .overlay {
+                    if transactions.isEmpty {
+                        ContentUnavailableView(label: {
+                            Label("No Transactions", systemImage: "list.bullet.rectangle.portrait")
+                        }, description: {
+                            Text("Start adding transactions to see your list")
+                        }, actions: {
+                            Button("Add Transaction") {
+                                addTransaction.toggle()
+                            }
+                        })
+                        .offset(y: -60)
+                    }
+                }
         }
     }
-    
-    private func totalAmountString(for transactions: [Transaction]) -> String {
-        // Calculate the total amount for each currency
-        let currencyTotals = Dictionary(grouping: transactions, by: { $0.currency })
-            .mapValues { $0.reduce(0) { $0 + $1.amount } }
-        
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        
-        // Format each total amount
-        let formattedTotals = currencyTotals.compactMap { currency, total -> String? in
-            formatter.currencyCode = currency
-            return formatter.string(from: NSNumber(value: total))
-        }
-        
-        return formattedTotals.joined(separator: "; ")
-    }
-
 }
 
 #Preview {
     let preview = Preview(Transaction.self)
-    let category = Category.categorySamples
+    let categories = Category.categorySamples
     let transactions = Transaction.transactionSamples
     
-    preview.addExamples(category)
+    preview.addExamples(categories)
     preview.addExamples(transactions)
     
     return TransactionsView()
