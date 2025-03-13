@@ -127,7 +127,7 @@ struct TransactionsView: View {
             return formatter.string(from: NSNumber(value: total))
         }
         
-        return formattedTotals.joined(separator: "; ")
+        return formattedTotals.joined(separator: " & ")
     }
 
 }

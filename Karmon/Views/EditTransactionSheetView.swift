@@ -17,6 +17,7 @@ struct EditTransactionSheetView: View {
     @State private var title: String = ""
     @State private var date: Date = .now
     @State private var amount: Double = 0
+    @State private var amountText: String = ""
     @State private var currency: String = getDefaultCurrency()
     @State private var selectedCategory: Category?
     @Query private var categories: [Category]
@@ -34,6 +35,28 @@ struct EditTransactionSheetView: View {
                 TextField("Amount", value: $amount, format: .currency(code: currency))
                     .keyboardType(.decimalPad)
                     .focused($amountFocus)
+                    .onChange(of: amountText) {
+                        // Allow only digits and a decimal separator (adjust if your locale uses comma)
+                        let allowedCharacters = "0123456789.,"
+                        let filtered = amountText.filter { allowedCharacters.contains($0) }
+                        if filtered != amountText {
+                            amountText = filtered
+                        }
+                        
+                        // Enforce the character limit
+                        if amountText.count > 10 {
+                            amountText = String(amountText.prefix(10))
+                        }
+                        
+                        // Convert the text to a Double.
+                        // Replace comma with dot if needed for conversion.
+                        let normalizedText = amountText.replacingOccurrences(of: ",", with: ".")
+                        if let value = Double(normalizedText) {
+                            amount = value
+                        } else {
+                            amount = 0
+                        }
+                    }
                     .toolbar {
                         if amountFocus == true {
                             ToolbarItemGroup(placement: .keyboard) {
@@ -50,6 +73,21 @@ struct EditTransactionSheetView: View {
                     .onAppear {
                         UITextField.appearance().clearButtonMode = .whileEditing
                     }
+                    .overlay(
+                        title.isEmpty || !titleFocus || title.count == 32 ? nil :
+                        HStack {
+                            Spacer()
+                            Text("\(32 - title.count)")
+                                .foregroundColor(.secondary)
+                                .padding(.trailing, 30)
+                        }
+                    )
+                    .onChange(of: title) {
+                        if title.count > 32 {
+                            title = String(title.prefix(32))
+                        }
+                    }
+                    
                 Picker("Category", selection: $selectedCategory) {
                     ForEach(categories) { category in
                         Text("\(category.title)").tag(category)
