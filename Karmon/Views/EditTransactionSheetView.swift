@@ -120,10 +120,22 @@ struct EditTransactionSheetView: View {
                 HStack {
                     Image(systemName: "folder")
                         .padding(.horizontal, 11)
-                    Picker("Category", selection: $selectedCategory) {
-                        ForEach(categories) { category in
-                            Text("\(category.title)").tag(category)
+                    Text("Category")
+                    Menu {
+                        Picker("", selection: $selectedCategory) {
+                            ForEach(categories) { category in
+                                Text("\(category.title)").tag(category)
+                            }
                         }
+                    } label: {
+                        Spacer()
+                        HStack {
+                            Text(selectedCategory?.title ?? "Other")
+                                .font(.subheadline)
+                        }
+                        .padding(8)
+                        .foregroundStyle(.white)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.tertiarySystemFill)))
                     }
                 }
                 HStack {
@@ -194,7 +206,7 @@ struct EditTransactionSheetView: View {
             amount: 10_000_000,
             currency: "EUR",
             dateCreated: .now,
-            category: Category(title: "other")
+            category: Category(title: "Other")
         )
     )
 }
