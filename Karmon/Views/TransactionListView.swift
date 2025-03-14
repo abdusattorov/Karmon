@@ -63,28 +63,19 @@ struct TransactionListView: View {
     }
     
     init(filterBy: String, searchString: String) {
+        let predicate: Predicate<Transaction>
         
-        var predicate: Predicate<Transaction>
-        
-        if searchString.isEmpty {
-            if filterBy.isEmpty {
-                if filterBy == "All" {
-                    predicate = #Predicate { transaction in
-                        true
-                    }
-                } else {
-                    predicate = #Predicate{ transaction in
-                        transaction.category.title.localizedStandardContains(filterBy)
-                    }
-                }
-            } else {
-                predicate = #Predicate { transaction in
-                    true
-                }
+        if !searchString.isEmpty {
+            predicate = #Predicate { transaction in
+                transaction.title.localizedStandardContains(searchString)
+            }
+        } else if filterBy.isEmpty || filterBy == "All" {
+            predicate = #Predicate { _ in
+                true
             }
         } else {
             predicate = #Predicate { transaction in
-                transaction.title.localizedStandardContains(searchString)
+                transaction.category.title.localizedStandardContains(filterBy)
             }
         }
         
