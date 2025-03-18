@@ -10,8 +10,10 @@ import SwiftUI
 struct SettingsView: View {
     
     @State private var selectedCurrency: String = getDefaultCurrency()
+    @State private var openRecurringPaymentsView = false
+    @State private var openCategoriesView = false
     
-    let currencies = ["UZS", "USD", "EUR", "GBP", "PLN", "HUF", "KRW"]
+    let currencies = getAllCurrencies()
     
     var body: some View {
         
@@ -19,29 +21,73 @@ struct SettingsView: View {
             List {
                 
                 Section {
-                    //                    NavigationLink {
-                    //                        TransactionsView()
-                    //                    } label: {
-                    //                        Image(systemName: "creditcard.fill")
-                    //                            .foregroundStyle(.white)
-                    //                            .frame(width: 32, height: 32)
-                    //                            .background(.blue)
-                    //                            .cornerRadius(8)
-                    //
-                    //                        Text("Accounts")
-                    //                    }
+                    
+//                    Accounts
+//                    NavigationLink {
+//                        TransactionsView()
+//                    } label: {
+//                        Image(systemName: "creditcard.fill")
+//                            .foregroundStyle(.white)
+//                            .frame(width: 32, height: 32)
+//                            .background(.blue)
+//                            .cornerRadius(8)
+//
+//                        Text("Accounts")
+//                    }
+                    
+//                    Recurring
+//                    Button {
+//                        openRecurringPaymentsView.toggle()
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "clock.arrow.circlepath")
+//                                .foregroundStyle(.white)
+//                                .frame(width: 32, height: 32)
+//                                .background(.blue)
+//                                .cornerRadius(8)
+//                                .bold()
+//                            Text("Recurring")
+//                                .foregroundColor(.white)
+//                            
+//                            Spacer()
+//                            Image(systemName: "chevron.right")
+//                                .foregroundStyle(Color.secondary)
+//                                .imageScale(.small)
+//                        }
+//                    }
+//                    NavigationLink {
+//                        RecurringPaymentsView()
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "clock.arrow.circlepath")
+//                                .foregroundStyle(.white)
+//                                .frame(width: 32, height: 32)
+//                                .background(.blue)
+//                                .cornerRadius(8)
+//                                .bold()
+//                            Text("Recurring")
+//                                .foregroundColor(.white)
+//                        }
+//                    }
+
+                    
+//                    Categories
                     NavigationLink {
                         CategoriesView()
                     } label: {
-                        Image(systemName: "folder.fill")
-                            .foregroundStyle(.white)
-                            .frame(width: 32, height: 32)
-                            .background(.blue)
-                            .cornerRadius(8)
-                        Text("Categories")
+                        HStack {
+                            Image(systemName: "folder.fill")
+                                .foregroundStyle(.white)
+                                .frame(width: 32, height: 32)
+                                .background(.blue)
+                                .cornerRadius(8)
+                                .bold()
+                            Text("Categories")
+                                .foregroundColor(.white)
+                        }
                     }
                     
-                    
+//                    Default Currency
                     HStack {
                         Image(systemName: "dollarsign.circle.fill")
                             .foregroundStyle(.white)
@@ -75,8 +121,44 @@ struct SettingsView: View {
                         }
                         
                     }
+                }
+                
+                Section {
                     
-                    
+////                    Categories
+////                    Button {
+////                        openCategoriesView.toggle()
+////                    } label: {
+////                        HStack {
+////                            Image(systemName: "folder.fill")
+////                                .foregroundStyle(.white)
+////                                .frame(width: 32, height: 32)
+////                                .background(.blue)
+////                                .cornerRadius(8)
+////                                .bold()
+////                            Text("Categories")
+////                                .foregroundColor(.white)
+////                            
+////                            Spacer()
+////                            Image(systemName: "chevron.right")
+////                                .foregroundStyle(Color.secondary)
+////                                .imageScale(.small)
+////                        }
+////                    }
+//                    NavigationLink {
+//                        CategoriesView()
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "folder.fill")
+//                                .foregroundStyle(.white)
+//                                .frame(width: 32, height: 32)
+//                                .background(.blue)
+//                                .cornerRadius(8)
+//                                .bold()
+//                            Text("Categories")
+//                                .foregroundColor(.white)
+//                        }
+//                    }
                 }
                 
                 //                Section {
@@ -131,6 +213,13 @@ struct SettingsView: View {
             
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
+
+            .fullScreenCover(isPresented: $openRecurringPaymentsView) {
+                RecurringPaymentsView()
+            }
+            .fullScreenCover(isPresented: $openCategoriesView) {
+                CategoriesView()
+            }
         }
     }
 }

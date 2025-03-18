@@ -17,9 +17,26 @@ struct TransactionCellView: View {
                 Spacer()
                 Text(formattedAmount(transaction.amount, currencyCode: transaction.currency))
             }
-            Text(transaction.category.title)
-                .foregroundStyle(.gray)
-                .font(.caption)
+            HStack {
+                Text(transaction.category.title)
+                if transaction.isRecurring {
+                    Text("•")
+                    Image(systemName: "repeat")
+                        .imageScale(.small)
+//                    Text(
+//                        (transaction.recurranceInterval! > 1) ?
+//                        "Every \(transaction.recurranceInterval!) \(transaction.recurranceType!.descr)s" :
+//                            "Every \(transaction.recurranceType!.descr)"
+//                    )
+                    if let recurranceDate = transaction.recurranceDate {
+                        Text(recurranceDate.toSectionHeaderFormat())
+                    } else {
+                        Text("")
+                    }
+                }
+            }
+            .font(.caption)
+            .foregroundStyle(.gray)
         }
     }
     
@@ -41,11 +58,14 @@ struct TransactionCellView: View {
 #Preview {
     let mockCategory = Category(title: "other")
     let mockTransaction = Transaction(
+        id: UUID(),
         title: "Groceries",
         amount: 1,
         currency: "USD",
         dateCreated: Date.fromString("01-12-2024", format: "dd-MM-yyyy") ?? .now,
-        category: mockCategory
+        category: mockCategory,
+        isRecurring: true,
+        recurranceDate: Date.now
     )
     
     TransactionCellView(transaction: mockTransaction)

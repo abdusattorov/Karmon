@@ -20,7 +20,6 @@ struct EditTransactionSheetView: View {
     @State private var amount: Double = 0
     @State private var lastAmount: Double = 0
     @State private var maxAmount: Double = 10_000_000_000
-//    @State private var amountText = ""
     
     @State private var selectedCurrency: String = ""
     @State private var currencies: [String] = getAllCurrencies()
@@ -38,111 +37,98 @@ struct EditTransactionSheetView: View {
         
         NavigationStack {
             Form {
-                HStack {
-                    Menu {
-                        Picker("", selection: $selectedCurrency) {
-                            ForEach(currencies, id: \.self) { currency in
-                                Text(currency)
+                Section {
+                    HStack {
+                        Menu {
+                            Picker("", selection: $selectedCurrency) {
+                                ForEach(currencies, id: \.self) { currency in
+                                    Text(currency)
+                                }
                             }
-                        }
-                    } label: {
-                        HStack {
-                            Text(selectedCurrency)
-                                .font(.footnote)
-                        }
-                        .padding(8)
-                        .foregroundStyle(.white)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.tertiarySystemFill)))
-                    }
-                    
-                    TextField("Amount", value: $amount, format: .number)
-                        .keyboardType(.decimalPad)
-                        .focused($amountFocus)
-                        .onChange(of: amount) {
-                            if amount < maxAmount {
-                                lastAmount = amount
-                            } else {
-                                amount = lastAmount
+                        } label: {
+                            HStack {
+                                Text(selectedCurrency)
+                                    .font(.footnote)
                             }
+                            .padding(8)
+                            .foregroundStyle(.white)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.tertiarySystemFill)))
                         }
-//                        .onChange(of: amountText) {
-//                                // Allow only digits and a decimal separator.
-//                                let allowedCharacters = "0123456789.,"
-//                                let filtered = amountText.filter { allowedCharacters.contains($0) }
-//                                if filtered != amountText {
-//                                    amountText = filtered
-//                                }
-//                                
-//                                // Convert to Double.
-//                                let normalizedText = amountText.replacingOccurrences(of: ",", with: ".")
-//                                if let value = Double(normalizedText) {
-//                                    amount = value
-//                                } else {
-//                                    amount = 0
-//                                }
-//                            }
-                        .toolbar {
-                            if amountFocus == true {
-                                ToolbarItemGroup(placement: .keyboard) {
-                                    Spacer()
-                                    Button("Next") {
-                                        amountFocus = false
-                                        titleFocus = true
+                        
+                        TextField("Amount", value: $amount, format: .number)
+                            .keyboardType(.decimalPad)
+                            .focused($amountFocus)
+                            .onChange(of: amount) {
+                                if amount < maxAmount {
+                                    lastAmount = amount
+                                } else {
+                                    amount = lastAmount
+                                }
+                            }
+                            .toolbar {
+                                if amountFocus == true {
+                                    ToolbarItemGroup(placement: .keyboard) {
+                                        Spacer()
+                                        Button("Next") {
+                                            amountFocus = false
+                                            titleFocus = true
+                                        }
                                     }
                                 }
                             }
-                        }
-                }
-                HStack {
-                    Image(systemName: "text.word.spacing")
-                        .padding(.horizontal, 11)
-                    TextField("Title", text: $title)
-                        .focused($titleFocus)
-                        .onAppear {
-                            UITextField.appearance().clearButtonMode = .whileEditing
-                        }
-                        .overlay(
-                            title.isEmpty || !titleFocus || title.count == 32 ? nil :
+                    }
+                    HStack {
+                        Image(systemName: "text.word.spacing")
+                            .padding(.horizontal, 11)
+                        TextField("Title", text: $title)
+                            .focused($titleFocus)
+                            .onAppear {
+                                UITextField.appearance().clearButtonMode = .whileEditing
+                            }
+                            .overlay(
+                                title.isEmpty || !titleFocus || title.count == 32 ? nil :
+                                HStack {
+                                    Spacer()
+                                    Text("\(32 - title.count)")
+                                        .foregroundColor(.secondary)
+                                        .padding(.trailing, 30)
+                                }
+                            )
+                            .onChange(of: title) {
+                                if title.count > 32 {
+                                    title = String(title.prefix(32))
+                                }
+                            }
+                    }
+                        
+                    HStack {
+                        Image(systemName: "folder")
+                            .padding(.horizontal, 11)
+                        Text("Category")
+                        Menu {
+                            Picker("", selection: $selectedCategory) {
+                                ForEach(categories) { category in
+                                    Text("\(category.title)").tag(category)
+                                }
+                            }
+                        } label: {
+                            Spacer()
                             HStack {
-                                Spacer()
-                                Text("\(32 - title.count)")
-                                    .foregroundColor(.secondary)
-                                    .padding(.trailing, 30)
+                                Text(selectedCategory?.title ?? "Other")
+                                    .font(.subheadline)
                             }
-                        )
-                        .onChange(of: title) {
-                            if title.count > 32 {
-                                title = String(title.prefix(32))
-                            }
+                            .padding(8)
+                            .foregroundStyle(.white)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.tertiarySystemFill)))
                         }
-                }
-                    
-                HStack {
-                    Image(systemName: "folder")
-                        .padding(.horizontal, 11)
-                    Text("Category")
-                    Menu {
-                        Picker("", selection: $selectedCategory) {
-                            ForEach(categories) { category in
-                                Text("\(category.title)").tag(category)
-                            }
-                        }
-                    } label: {
-                        Spacer()
-                        HStack {
-                            Text(selectedCategory?.title ?? "Other")
-                                .font(.subheadline)
-                        }
-                        .padding(8)
-                        .foregroundStyle(.white)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(Color(.tertiarySystemFill)))
+                    }
+                    HStack {
+                        Image(systemName: "calendar")
+                            .padding(.horizontal, 11)
+                        DatePicker("Date", selection: $date, in: ...Date.now, displayedComponents: .date)
                     }
                 }
-                HStack {
-                    Image(systemName: "calendar")
-                        .padding(.horizontal, 11)
-                    DatePicker("Date", selection: $date, in: ...Date.now, displayedComponents: .date)
-                }
+
             }
             .onAppear {
                 selectedCurrency = transaction.currency
@@ -202,11 +188,16 @@ struct EditTransactionSheetView: View {
     
     EditTransactionSheetView(
         transaction: Transaction(
-            title: "Lemon tea",
-            amount: 10_000_000,
-            currency: "EUR",
-            dateCreated: .now,
-            category: Category(title: "Other")
+            id: UUID(),
+            title: "Something",
+            amount: 3,
+            currency: "USD",
+            dateCreated: Date.now,
+            category: Category(title: "Other"),
+            isRecurring: true,
+            recurranceType: RecurranceType.monthly,
+            recurranceInterval: 1,
+            recurranceDate: Date.now
         )
     )
 }

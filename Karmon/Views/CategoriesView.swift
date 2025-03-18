@@ -75,7 +75,7 @@ struct CategoriesView: View {
             Group {
                 if categories.isEmpty {
                     ContentUnavailableView {
-                        Label("No Categories", systemImage: "bag.fill")
+                        Label("No Categories", systemImage: "folder.fill")
                     } description: {
                         Text("Add Categories to see the list.")
                     }
@@ -150,6 +150,13 @@ struct CategoriesView: View {
             .onAppear {
                 titleFocus = true
             }
+//            .toolbar {
+//                ToolbarItem(placement: .navigationBarLeading) {
+//                    Button("Done") {
+//                        dismiss()
+//                    }
+//                }
+//            }
         }
         
     }
@@ -167,12 +174,12 @@ struct CategoriesView: View {
     }
 }
 
-//#Preview {
-//    let preview = Preview(Category.self)
-//    let category = Category.categorySamples
-//    
-//    preview.addExamples(category)
-//    
-//    return CategoriesView()
-//        .modelContainer(preview.container)
-//}
+#Preview {
+    let preview = Preview(Category.self)
+    let category = Category.categorySamples
+    
+    preview.addExamples(category)
+    
+    return CategoriesView()
+        .modelContainer(preview.container)
+}

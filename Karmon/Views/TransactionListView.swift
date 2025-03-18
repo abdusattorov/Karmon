@@ -14,6 +14,21 @@ struct TransactionListView: View {
     @Query private var transactions: [Transaction]
     @Query private var categories: [Category]
     @State private var selectedTransaction: Transaction?
+    @State private var activeSheet: ActiveSheet?
+    
+    enum ActiveSheet: Identifiable {
+        case edit(Transaction)
+        case recurring(Transaction)
+        
+        var id: String {
+            switch self {
+            case .edit(let transaction):
+                return "edit-\(transaction.id)"
+            case .recurring(let transaction):
+                return "recurring-\(transaction.id)"
+            }
+        }
+    }
     
 
     private var groupedTransactions: [(key: Date, value: [Transaction])] {
@@ -42,7 +57,18 @@ struct TransactionListView: View {
                         TransactionCellView(transaction: transaction)
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                selectedTransaction = transaction
+                                activeSheet = .edit(transaction)
+                            }
+                            .swipeActions(edge: .leading) {
+                                Button {
+                                    activeSheet = .recurring(transaction)
+                                } label: {
+                                    VStack {
+                                        Image(systemName: "repeat")
+                                        Text("Recurring")
+                                    }
+                                }
+                                .tint(Color.gray)
                             }
                     }
                     .onDelete { indexSet in
@@ -54,10 +80,14 @@ struct TransactionListView: View {
                 }
             }
             
-            .sheet(item: $selectedTransaction) { transaction in
+        }
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .edit(let transaction):
                 EditTransactionSheetView(transaction: transaction)
+            case .recurring(let transaction):
+                AddRecurringView(transaction: transaction)
             }
-            
         }
         .scrollIndicators(.hidden)
     }
@@ -99,6 +129,18 @@ struct TransactionListView: View {
         }
         
         return formattedTotals.joined(separator: "; ")
+    }
+    
+    private func addToRecurring(transaction: Transaction) -> some View {
+        Button {
+            selectedTransaction = transaction
+        } label: {
+            VStack {
+                Image(systemName: "repeat")
+                Text("Recurring")
+            }
+        }
+        .tint(Color.gray)
     }
 }
 
